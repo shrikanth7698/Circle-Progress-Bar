@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="false">
+
+    <item
+        android:duration="40"
+        android:drawable="@drawable/stick0"/>
+
+    <item
+        android:duration="40"
+        android:drawable="@drawable/stick1"/>
+
+    <item
+        android:duration="40"
+        android:drawable="@drawable/stick2"/>
+
+    <item
+        android:duration="40"
+        android:drawable="@drawable/stick3"/>
+
+    <item
+        android:duration="40"
+        android:drawable="@drawable/stick4"/>
+
+    <item
+        android:duration="40"
+        android:drawable="@drawable/stick5"/>
+
+    <item
+        android:duration="40"
+        android:drawable="@drawable/stick6"/>
+
+    <item
+        android:duration="40"
+        android:drawable="@drawable/stick7"/>
+
+    <item
+        android:duration="40"
+        android:drawable="@drawable/stick8"/>
+
+
+</animation-list>
