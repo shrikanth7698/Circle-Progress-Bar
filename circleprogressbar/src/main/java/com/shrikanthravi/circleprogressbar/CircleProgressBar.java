@@ -3,14 +3,22 @@ package com.shrikanthravi.circleprogressbar;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.graphics.RectF;
 import android.graphics.Typeface;
+import android.os.CountDownTimer;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.ImageView;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by shrikanthravi on 10/02/18.
@@ -23,13 +31,15 @@ public class CircleProgressBar extends View {
     private float progress = 0;
     private int min = 0;
     private int max = 100;
+    int i=0;
 
     private int startAngle = -90;
     private int color = Color.DKGRAY;
     private RectF rectF;
     private Paint backgroundPaint;
     private Paint foregroundPaint;
-
+    Bitmap[] frames = new Bitmap[18];
+    private boolean stickman = true;
     public float getStrokeWidth() {
         return strokeWidth;
     }
@@ -59,9 +69,44 @@ public class CircleProgressBar extends View {
         init(context, attrs);
     }
 
+    public Bitmap makeScaled(Bitmap src) {
+        int width = src.getWidth();
+        int height = src.getHeight();
+        float scaledWidth = width * 1f;
+        float scaledHeight = height * 1f;
+        Matrix m = new Matrix();
+        m.setRectToRect(new RectF(0, 0, src.getWidth(), src.getHeight()), new RectF(0, 0, scaledWidth, scaledHeight), Matrix.ScaleToFit.CENTER);
+        Bitmap output = Bitmap.createBitmap(src, 0, 0, src.getWidth(), src.getHeight(), m, true);
+        Canvas xfas = new Canvas(output);
+        Paint paint = new Paint();
+        paint.setAntiAlias(true);
+        paint.setFilterBitmap(true);
+        paint.setDither(true);
+        xfas.drawBitmap(output, 0, 0, paint);
 
+        return output;
+    }
     private void init(Context context, AttributeSet attrs) {
         rectF = new RectF();
+
+        frames[0] = BitmapFactory.decodeResource(getResources(), R.drawable.stick0);
+        frames[1] = BitmapFactory.decodeResource(getResources(), R.drawable.stick1);
+        frames[2] = BitmapFactory.decodeResource(getResources(), R.drawable.stick2);
+        frames[3] = BitmapFactory.decodeResource(getResources(), R.drawable.stick3);
+        frames[4] = BitmapFactory.decodeResource(getResources(), R.drawable.stick4);
+        frames[5] = BitmapFactory.decodeResource(getResources(), R.drawable.stick5);
+        frames[6] = BitmapFactory.decodeResource(getResources(), R.drawable.stick6);
+        frames[7] = BitmapFactory.decodeResource(getResources(), R.drawable.stick7);
+        frames[8] = BitmapFactory.decodeResource(getResources(), R.drawable.stick8);
+        frames[9] = BitmapFactory.decodeResource(getResources(), R.drawable.stick0);
+        frames[10] = BitmapFactory.decodeResource(getResources(), R.drawable.stick1);
+        frames[11] = BitmapFactory.decodeResource(getResources(), R.drawable.stick2);
+        frames[12] = BitmapFactory.decodeResource(getResources(), R.drawable.stick3);
+        frames[13] = BitmapFactory.decodeResource(getResources(), R.drawable.stick4);
+        frames[14] = BitmapFactory.decodeResource(getResources(), R.drawable.stick5);
+        frames[15] = BitmapFactory.decodeResource(getResources(), R.drawable.stick6);
+        frames[16] = BitmapFactory.decodeResource(getResources(), R.drawable.stick7);
+        frames[17] = BitmapFactory.decodeResource(getResources(), R.drawable.stick8);
         TypedArray typedArray = context.getTheme().obtainStyledAttributes(
                 attrs,
                 R.styleable.CircleProgressBar,
@@ -88,6 +133,7 @@ public class CircleProgressBar extends View {
         foregroundPaint.setStrokeCap(Paint.Cap.ROUND);
         foregroundPaint.setStyle(Paint.Style.STROKE);
         foregroundPaint.setStrokeWidth(strokeWidth);
+
     }
 
     @Override
@@ -95,8 +141,9 @@ public class CircleProgressBar extends View {
         super.onDraw(canvas);
 
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setTextSize(28);
-        paint.setStrokeWidth(2);
+
+        //paint.setTextSize(28);
+        paint.setStrokeWidth(10);
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
         Typeface font = Typeface.createFromAsset(getContext().getAssets(), "google_font.ttf");
         paint.setTypeface(font);
@@ -106,7 +153,45 @@ public class CircleProgressBar extends View {
         float angle1 = 360 * 1/max;
         canvas.drawArc(rectF, startAngle, angle, false, foregroundPaint);
         canvas.drawCircle(rectF.centerX(),rectF.top,1,foregroundPaint);
+
         int progressText = (int) Math.ceil(progress);
+        if(stickman) {
+            Bitmap scaledBitmap = Bitmap.createScaledBitmap(frames[i],
+                    canvas.getWidth() / 2,
+                    canvas.getHeight() / 2,
+                    true);
+            //canvas.drawBitmap(frames[i], ((canvas.getWidth() - frames[i].getWidth()) / 2), ((canvas.getHeight() - frames[i].getHeight()) / 2), null);
+            canvas.drawBitmap(scaledBitmap, ((canvas.getWidth() - scaledBitmap.getWidth()) / 2), ((canvas.getHeight() - scaledBitmap.getHeight()) / 2), paint);
+            //canvas.drawBitmap(frames[i], null, new RectF(0, 0, canvas.getWidth(), canvas.getHeight()), null);
+            i = i + 1;
+            if (i == 17) {
+                i = 0;
+            }
+            postInvalidateDelayed(40);
+        }
+        else{
+            Paint paint1 = new Paint(Paint.ANTI_ALIAS_FLAG);
+            paint1.setColor(getResources().getColor(android.R.color.transparent));
+            Bitmap scaledBitmap = Bitmap.createScaledBitmap(frames[i],
+                    canvas.getWidth() / 2,
+                    canvas.getHeight() / 2,
+                    true);
+            //canvas.drawBitmap(frames[i], ((canvas.getWidth() - frames[i].getWidth()) / 2), ((canvas.getHeight() - frames[i].getHeight()) / 2), null);
+            canvas.drawBitmap(scaledBitmap, ((canvas.getWidth() - scaledBitmap.getWidth()) / 2), ((canvas.getHeight() - scaledBitmap.getHeight()) / 2), paint1);
+            //canvas.drawBitmap(frames[i], null, new RectF(0, 0, canvas.getWidth(), canvas.getHeight()), null);
+            i = i + 1;
+            if (i == 17) {
+                i = 0;
+            }
+            postInvalidateDelayed(40);
+        }
+
+
+
+
+
+
+
 
     }
 
@@ -118,6 +203,7 @@ public class CircleProgressBar extends View {
         final int min = Math.min(width, height);
         setMeasuredDimension(min, min);
         rectF.set(0 + strokeWidth / 2, 0 + strokeWidth / 2, min - strokeWidth / 2, min - strokeWidth / 2);
+
     }
 
 
@@ -170,4 +256,14 @@ public class CircleProgressBar extends View {
         objectAnimator.start();
     }
 
+    public void hideStickMan(){
+
+        this.stickman=false;
+    }
+
+    public void showStickMan(){
+
+        this.stickman=true;
+
+    }
 }

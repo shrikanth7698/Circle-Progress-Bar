@@ -11,6 +11,7 @@
         android:layout_height="200dp"
         android:layout_centerHorizontal="true"
         android:id="@+id/circleProgressBar"
+
         app:progress="25"
         app:Thickness="15dp"
         app:Color="@color/colorPrimary"
@@ -23,10 +24,13 @@
         android:layout_marginLeft="50dp"
         android:layout_marginRight="50dp"
         android:id="@+id/progressSeekBar"/>
-    <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:id="@+id/stickImageView"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"/>
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/progressSeekBar"
+        android:layout_margin="10dp"
+        android:id="@+id/switchStickman"
+        android:layout_centerHorizontal="true"
+        android:text="Show StickMan  "
+        android:padding="5dp"/>
 </RelativeLayout>
